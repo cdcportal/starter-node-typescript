@@ -16,6 +16,17 @@ const job = async () => {
             1. Read .env files using fs in synchronous/asynchronous fashion
             2. Iterate over secrets asynchronously from Cloud Secret Manager.
     */
+
+    const allFileContents = fs.readFileSync('.env', 'utf-8');
+    allFileContents.split(/\r?\n/).forEach(line => {
+        if (line.trim() == '')
+            return;
+        const strings = line.split(" = ");
+        const key = `process.env.${strings[0]}`;
+        const val = JSON.stringify(strings[1]);
+        ENVIRONMENT_VARIABLES[key] = val;
+    });
+
     console.log(ENVIRONMENT_VARIABLES);
 
     return {
